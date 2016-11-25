@@ -8,16 +8,17 @@
   var widgetId = tag.data('mixpanel-id');
   var trackerData = Fliplet.Widget.getData(widgetId);
   var trackerToken = trackerData[Fliplet.Env.get('platform') === 'web' ? 'webTracker' : 'nativeTracker'];
-  var storageKey = 'mixpanel' + widgetId;
+  var eventsStorageKey = 'mixpanel-events-' + widgetId;
+  var propertiesStorageKey = 'mixpanel-properties-' + widgetId;  // Used to store super properties
 
   Fliplet.Navigator.onOnline(function trackStored() {
-    Fliplet.Storage.get(storageKey)
+    Fliplet.Storage.get(eventsStorageKey)
       .then(function (trackings) {
         if (!trackings) {
           return;
         }
 
-        Fliplet.Storage.remove(storageKey).then(function() {
+        Fliplet.Storage.remove(eventsStorageKey).then(function() {
           trackings.forEach(function (tracking) {
             switch (tracking.type) {
               case 'trackEvent':
@@ -36,7 +37,7 @@
     }
     
     if (!Fliplet.Navigator.isOnline()) {
-      return Fliplet.Storage.get(storageKey)
+      return Fliplet.Storage.get(eventsStorageKey)
         .then(function (trackings) {
           var tracking = {
             type: 'trackEvent',
@@ -45,18 +46,29 @@
 
           trackings = trackings || [];
           trackings.push(tracking);
-          Fliplet.Storage.set(storageKey, trackings);
+          Fliplet.Storage.set(eventsStorageKey, trackings);
         })
     }
 
     var category = data.category;
     delete data.category;
-    mixpanel.track(category, data);
+
+    // Get super properties and track the event
+    Fliplet.Storage.get(propertiesStorageKey)
+      .then(function mixpanelTrackEvent(properties) {
+        mixpanel.track(category, _.assignIn(data, properties));
+      });
+  }
+
+  // Register a set of super properties, which are included with all events.
+  function register(data) {
+    Fliplet.Storage.set(propertiesStorageKey, data);
   }
 
   Fliplet.Navigator.onReady()
     .then(function () {
       mixpanel.init(trackerToken);
-      Fliplet.Analytics2.subscribe('trackEvent', trackEvent)
+      Fliplet.Analytics2.subscribe('trackEvent', trackEvent);
+      Fliplet.Analytics2.subscribe('register', register);
     });
 })();
