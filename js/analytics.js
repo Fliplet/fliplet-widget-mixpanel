@@ -14,7 +14,7 @@
     Fliplet.Storage.get(storageKey)
       .then(function (trackings) {
         if (!trackings) {
-          Fliplet.Storage.set(storageKey, []);
+          return;
         }
 
         Fliplet.Storage.remove(storageKey).then(function() {
@@ -42,6 +42,8 @@
             type: 'trackEvent',
             data: data
           };
+
+          trackings = trackings || [];
           trackings.push(tracking);
           Fliplet.Storage.set(storageKey, trackings);
         })
@@ -52,7 +54,8 @@
     mixpanel.track(category, data);
   }
 
-  Fliplet.Navigator.onReady().then(function () {
+  Fliplet.Navigator.onReady()
+    .then(function () {
       mixpanel.init(trackerToken);
       Fliplet.Analytics2.subscribe('trackEvent', trackEvent)
     });
