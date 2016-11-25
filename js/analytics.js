@@ -69,6 +69,6 @@
     .then(function () {
       mixpanel.init(trackerToken);
       Fliplet.Analytics2.subscribe('trackEvent', trackEvent);
-      Fliplet.Analytics2.subscribe('trackRegister', register);
+      Fliplet.Analytics2.subscribe('info', register);
     });
 })();
