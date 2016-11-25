@@ -69,6 +69,10 @@
     .then(function () {
       mixpanel.init(trackerToken);
       Fliplet.Analytics.subscribe('trackEvent', trackEvent);
+      Fliplet.Analytics.subscribe('pageView', function (data) {
+        data.category = 'screen view';
+        trackEvent(data);
+      });
       Fliplet.Analytics.subscribe('info', register);
     });
 })();
