@@ -13,7 +13,7 @@ Fliplet.Analytics.trackEvent({
 
 ##Register a set of super properties 
 ```
-Fliplet.Analytics.register({
+Fliplet.Analytics.info({
   foo: 'a property',
   bar: 'another property'
 })
