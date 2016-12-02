@@ -5,6 +5,11 @@
     return;
   }
 
+  // Don't track on edit mode
+  if (Fliplet.Env.get('interact')) {
+    return;
+  }
+
   var widgetId = tag.data('mixpanel-id');
   var trackerData = Fliplet.Widget.getData(widgetId);
   var trackerToken = trackerData[Fliplet.Env.get('platform') === 'web' ? 'webTracker' : 'nativeTracker'];
