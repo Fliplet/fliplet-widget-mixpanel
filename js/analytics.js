@@ -51,7 +51,7 @@
 
           trackings = trackings || [];
           trackings.push(tracking);
-          Fliplet.Storage.set(eventsStorageKey, trackings);
+          return Fliplet.Storage.set(eventsStorageKey, trackings);
         })
     }
 
@@ -59,15 +59,16 @@
     delete data.category;
 
     // Get super properties and track the event
-    Fliplet.Storage.get(propertiesStorageKey)
+    return Fliplet.Storage.get(propertiesStorageKey)
       .then(function mixpanelTrackEvent(properties) {
         mixpanel.track(category, _.assignIn(data, properties));
+        return Promise.resolve();
       });
   }
 
   // Register a set of super properties, which are included with all events.
   function register(data) {
-    Fliplet.Storage.set(propertiesStorageKey, data);
+    return Fliplet.Storage.set(propertiesStorageKey, data);
   }
 
   Fliplet.Navigator.onReady()
