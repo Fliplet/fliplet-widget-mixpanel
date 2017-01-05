@@ -11,10 +11,11 @@
   }
 
   var widgetId = tag.data('mixpanel-id');
+  var widgetUuid = tag.data('mixpanel-uuid');
   var trackerData = Fliplet.Widget.getData(widgetId);
   var trackerToken = trackerData[Fliplet.Env.get('platform') === 'web' ? 'webTracker' : 'nativeTracker'];
-  var eventsStorageKey = 'mixpanel-events-' + widgetId;
-  var propertiesStorageKey = 'mixpanel-properties-' + widgetId;  // Used to store super properties
+  var eventsStorageKey = 'mixpanel-events-' + widgetUuid;
+  var propertiesStorageKey = 'mixpanel-properties-' + widgetUuid;  // Used to store super properties
 
   Fliplet.Navigator.onOnline(function trackStored() {
     Fliplet.Storage.get(eventsStorageKey)
@@ -35,12 +36,12 @@
         });
       });
   });
-  
+
   function trackEvent(data) {
     if (!data.category) {
       return;
     }
-    
+
     if (!Fliplet.Navigator.isOnline()) {
       return Fliplet.Storage.get(eventsStorageKey)
         .then(function (trackings) {
