@@ -14,3 +14,7 @@ $('form').submit(function (event) {
 Fliplet.Widget.onSaveRequest(function () {
   $('form').submit();
 });
+
+Fliplet.Navigator.onReady().then(function () {
+  Fliplet.Widget.autosize();
+});
