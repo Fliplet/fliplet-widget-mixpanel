@@ -2,6 +2,7 @@
   "name": "Mixpanel",
   "package": "com.fliplet.mixpanel",
   "version": "1.0.0",
+  "description": "<p>Use this add-on to add Mixpanel tracking so you can see what your app users do and measure other interesting things.</p>",
   "icon": "img/icon.png",
   "tags": ["type:appComponent", "category:analytics"],
   "provider_only": false,
