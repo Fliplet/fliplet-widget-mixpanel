@@ -81,5 +81,20 @@
         trackEvent(data);
       });
       Fliplet.Analytics.subscribe('info', register);
+
+      // Subscribe to other hooks than Analytics
+      Fliplet.Hooks.on('onVerified', function(data) {
+        if (!data || !data.id) {
+          return;
+        }
+
+        mixpanel.identify(data.id);
+
+        if (data.entry) {
+          mixpanel.people.set(data.entry);
+        }
+        
+        console.log('[Hook] onVerified', data);
+      });
     });
 })();
