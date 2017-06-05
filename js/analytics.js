@@ -77,6 +77,9 @@
       mixpanel.init(trackerToken);
       Fliplet.Analytics.subscribe('trackEvent', trackEvent);
       Fliplet.Analytics.subscribe('pageView', function (data) {
+        // TODO: remove the next line
+        data.title = Fliplet.Env.get('organizationName') + '/' + Fliplet.Env.get('appName') + '/' + Fliplet.Env.get('pageTitle');
+        
         data.category = 'screen view';
         trackEvent(data);
       });
