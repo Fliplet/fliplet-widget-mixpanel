@@ -77,9 +77,6 @@
     .then(function () {
       Fliplet.Analytics.subscribe('trackEvent', trackEvent);
       Fliplet.Analytics.subscribe('pageView', function (data) {
-        // TODO: remove the next line
-        data.title = Fliplet.Env.get('organizationName') + '/' + Fliplet.Env.get('appName') + '/' + Fliplet.Env.get('pageTitle');
-
         data.category = 'screen view';
         trackEvent(data);
       });
@@ -87,15 +84,24 @@
 
       // Subscribe to other hooks than Analytics
       Fliplet.Hooks.on('onUserVerified', function (data) {
-        if (!data || !data.id) {
-          return;
-        }
+        Fliplet.Analytics.isTrackingEnabled().then(function(userEnabledTracking) {
+          // TODO: Remove next line once we implement this on core. Providers should 
+          // safely subcribe to hooks without checking for userEnabledTracking
+          // This is also here and not before the hook atm because concurrency issues
+          if (!userEnabledTracking) {
+            return;
+          }
+          
+          if (!data || !data.id) {
+            return;
+          }
 
-        mixpanel.identify(data.id);
+          mixpanel.identify(data.id);
 
-        if (data.data) {
-          mixpanel.people.set(data.data);
-        }
+          if (data.data) {
+            mixpanel.people.set(data.data);
+          }
+        })
       });
     });
 })();
