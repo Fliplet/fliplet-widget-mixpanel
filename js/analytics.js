@@ -75,30 +75,27 @@
   mixpanel.init(trackerToken);
   Fliplet.Navigator.onReady()
     .then(function () {
-      Fliplet.Analytics.isTrackingEnabled(function(userEnabledTracking) {
-          if (!userEnabledTracking) {
-            return;
-          }
+      Fliplet.Analytics.subscribe('trackEvent', trackEvent);
+      Fliplet.Analytics.subscribe('pageView', function (data) {
+        // TODO: remove the next line
+        data.title = Fliplet.Env.get('organizationName') + '/' + Fliplet.Env.get('appName') + '/' + Fliplet.Env.get('pageTitle');
 
-          Fliplet.Analytics.subscribe('trackEvent', trackEvent);
-          Fliplet.Analytics.subscribe('pageView', function (data) {
-            data.category = 'screen view';
-            trackEvent(data);
-          });
-          Fliplet.Analytics.subscribe('info', register);
-
-          // Subscribe to other hooks than Analytics
-          Fliplet.Hooks.on('onUserVerified', function (data) {
-            if (!data || !data.id) {
-              return;
-            }
-
-            mixpanel.identify(data.id);
-
-            if (data.data) {
-              mixpanel.people.set(data.data);
-            }
-          });
-        });
+        data.category = 'screen view';
+        trackEvent(data);
       });
+      Fliplet.Analytics.subscribe('info', register);
+
+      // Subscribe to other hooks than Analytics
+      Fliplet.Hooks.on('onUserVerified', function (data) {
+        if (!data || !data.id) {
+          return;
+        }
+
+        mixpanel.identify(data.id);
+
+        if (data.data) {
+          mixpanel.people.set(data.data);
+        }
+      });
+    });
 })();
