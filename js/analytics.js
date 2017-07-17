@@ -75,7 +75,7 @@
   mixpanel.init(trackerToken);
   Fliplet.Navigator.onReady()
     .then(function () {
-      Fliplet.Analytics.isTrackingEnabled().then(function(userEnabledTracking) {
+      Fliplet.Analytics.isTrackingEnabled(function(userEnabledTracking) {
           if (!userEnabledTracking) {
             return;
           }
