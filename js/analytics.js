@@ -77,9 +77,6 @@
     .then(function () {
       Fliplet.Analytics.subscribe('trackEvent', trackEvent);
       Fliplet.Analytics.subscribe('pageView', function (data) {
-        // TODO: remove the next line
-        data.title = Fliplet.Env.get('organizationName') + '/' + Fliplet.Env.get('appName') + '/' + Fliplet.Env.get('pageTitle');
-
         data.category = 'screen view';
         trackEvent(data);
       });
@@ -87,15 +84,17 @@
 
       // Subscribe to other hooks than Analytics
       Fliplet.Hooks.on('onUserVerified', function (data) {
-        if (!data || !data.id) {
-          return;
-        }
+        Fliplet.Analytics.isTrackingEnabled().then(function(userEnabledTracking) {
+          if (!data || !data.id) {
+            return;
+          }
 
-        mixpanel.identify(data.id);
+          mixpanel.identify(data.id);
 
-        if (data.data) {
-          mixpanel.people.set(data.data);
-        }
+          if (data.data) {
+            mixpanel.people.set(data.data);
+          }
+        })
       });
     });
 })();
