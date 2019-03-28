@@ -14,8 +14,7 @@
       "fliplet-studio-ui"
     ],
     "assets": [
-      "js/interface.js",
-      "js/lib/mixpanel.js"
+      "js/interface.js"
     ]
   },
   "build": {
