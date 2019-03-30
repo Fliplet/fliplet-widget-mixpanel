@@ -17,6 +17,11 @@
   var eventsStorageKey = 'mixpanel-events-' + widgetUuid;
   var propertiesStorageKey = 'mixpanel-properties-' + widgetUuid;  // Used to store super properties
 
+  if (!trackerToken) {
+    // No tracker token provided
+    return;
+  }
+
   Fliplet.Navigator.onOnline(function trackStored() {
     Fliplet.Storage.get(eventsStorageKey)
       .then(function (trackings) {
@@ -85,13 +90,13 @@
       // Subscribe to other hooks than Analytics
       Fliplet.Hooks.on('onUserVerified', function (data) {
         Fliplet.Analytics.isTrackingEnabled().then(function(userEnabledTracking) {
-          // TODO: Remove next line once we implement this on core. Providers should 
+          // TODO: Remove next line once we implement this on core. Providers should
           // safely subcribe to hooks without checking for userEnabledTracking
           // This is also here and not before the hook atm because concurrency issues
           if (!userEnabledTracking) {
             return;
           }
-          
+
           if (!data || !data.id) {
             return;
           }
