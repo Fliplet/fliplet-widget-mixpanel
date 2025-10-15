@@ -67,7 +67,7 @@
     // Get super properties and track the event
     return Fliplet.Storage.get(propertiesStorageKey)
       .then(function mixpanelTrackEvent(properties) {
-        mixpanel.track(category, _.assignIn(data, properties));
+        mixpanel.track(category, Fliplet.Utils.assignIn(data, properties));
         return Promise.resolve();
       });
   }
