@@ -11,6 +11,7 @@
   "interface": {
     "dependencies": [
       "fliplet-core",
+      "fliplet-utils",
       "fliplet-studio-ui"
     ],
     "assets": [
@@ -20,7 +21,7 @@
   "build": {
     "dependencies": [
       "fliplet-core",
-      "lodash"
+      "fliplet-utils"
     ],
     "assets": [
       "js/analytics.js",
